@@ -46,7 +46,7 @@ class ViewTestCase(TestCase):
         self.bucketlist_data = {'name': 'Go to Canada'}
         self.response = self.client.post(reverse('create'),
                                          self.bucketlist_data,
-                                         format='json')
+                                         format="json")
 
     def test_api_can_ceate_bucketlist(self):
         """
@@ -58,5 +58,5 @@ class ViewTestCase(TestCase):
         """
         Delete all created instance after testing
         """
-        for key, value in self.bucketlist_data.items():
-            Bucketlist.objects.get(key=value).delete()
+        for value in self.bucketlist_data.values():
+            Bucketlist.objects.get(name=value).delete()

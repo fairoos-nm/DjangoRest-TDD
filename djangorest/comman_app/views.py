@@ -5,7 +5,7 @@ from .models import Bucketlist
 
 class CreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
-    query_set = Bucketlist.objects.all()
+    queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
 
     def perform_create(self, serializer):
