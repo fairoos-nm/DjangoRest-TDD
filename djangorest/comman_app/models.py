@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+
+class Bucketlist(models.Model):
+    """
+    This class defines the bucklist model.
+    """
+    pass
