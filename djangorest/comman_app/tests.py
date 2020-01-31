@@ -47,6 +47,8 @@ class ViewTestCase(TestCase):
         self.response = self.client.post(reverse('create'),
                                          self.bucketlist_data,
                                          format="json")
+        self.bucketlist = Bucketlist.objects.get(
+            name=list(self.bucketlist_data.values())[0])
 
     def test_api_can_ceate_bucketlist(self):
         """
@@ -54,9 +56,45 @@ class ViewTestCase(TestCase):
         """
         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
-    def tearDown(self):
+    def test_api_can_get_a_bucketlist(self):
         """
-        Delete all created instance after testing
+        Test the api can get an given bucketlist.
         """
-        for value in self.bucketlist_data.values():
-            Bucketlist.objects.get(name=value).delete()
+        response = self.client.get(reverse('details',
+                                           kwargs={'pk': self.bucketlist.id}),
+                                   format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, self.bucketlist)
+
+    def test_api_can_update_a_bucketlist(self):
+        """
+        Test the api can  updata a given bucketlist
+        """
+
+        new_data = {'name': 'Back to India'}
+        response = self.client.put(
+            reverse('details',
+                    kwargs={'pk': self.bucketlist.id}),
+            new_data,
+            format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_api_can_delete_a_bucketlist(self):
+        """
+        Test the api can delete a given instance.
+        """
+
+        response = self.client.delete(
+            reverse('details',
+                    kwargs={'pk': self.bucketlist.id}),
+            format="json",
+            follow=True)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    # def tearDown(self):
+    #     """
+    #     Delete all created instance after testing
+    #     """
+    #     for value in self.bucketlist_data.values():
+    #         Bucketlist.objects.get(name=value).delete()
