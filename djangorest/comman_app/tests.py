@@ -22,3 +22,9 @@ class ModelTestCase(TestCase):
         self.bucklist.save()
         new_count = Bucketlist.objects.count()
         self.assertNotEqual(old_count, new_count)
+
+    def tearDown(self):
+        """
+        Remove test clinet after testing
+        """
+        Bucketlist.objects.get(name=self.bucklist_name).delete()
