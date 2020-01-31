@@ -1,5 +1,8 @@
 from django.test import TestCase
 from .models import Bucketlist
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.urls import reverse
 
 
 class ModelTestCase(TestCase):
@@ -28,3 +31,32 @@ class ModelTestCase(TestCase):
         Remove test clinet after testing
         """
         Bucketlist.objects.get(name=self.bucklist_name).delete()
+
+
+class ViewTestCase(TestCase):
+    """
+    Test suite for the common views
+    """
+
+    def setUp(self):
+        """
+        Define test clinent and other test varibale.
+        """
+        self.client = APIClient()
+        self.bucketlist_data = {'name': 'Go to Canada'}
+        self.response = self.client.post(reverse('create'),
+                                         self.bucketlist_data,
+                                         format='json')
+
+    def test_api_can_ceate_bucketlist(self):
+        """
+        Test api has bucklist creation capability
+        """
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+
+    def tearDown(self):
+        """
+        Delete all created instance after testing
+        """
+        for key, value in self.bucketlist_data.items():
+            Bucketlist.objects.get(key=value).delete()
