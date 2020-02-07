@@ -3,6 +3,7 @@ from .models import Bucketlist
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class ModelTestCase(TestCase):
@@ -14,8 +15,9 @@ class ModelTestCase(TestCase):
         """
         Define test client and other client varibale
         """
+        user = User.objects.create(username='razi')
         self.bucklist_name = 'Write world class code'
-        self.bucklist = Bucketlist(name=self.bucklist_name)
+        self.bucklist = Bucketlist(name=self.bucklist_name, owener=user)
 
     def test_model_can_create_bucketlist(self):
         """
@@ -42,8 +44,9 @@ class ViewTestCase(TestCase):
         """
         Define test clinent and other test varibale.
         """
+        user = User.objects.create(username='razi')
         self.client = APIClient()
-        self.bucketlist_data = {'name': 'Go to Canada'}
+        self.bucketlist_data = {'name': 'Go to Canada', 'owner': user.id}
         self.response = self.client.post(reverse('create'),
                                          self.bucketlist_data,
                                          format="json")
