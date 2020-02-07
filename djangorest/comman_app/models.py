@@ -6,6 +6,8 @@ class Bucketlist(models.Model):
     This class defines the bucklist model.
     """
     name = models.CharField(max_length=225, blank=False, unique=True)
+    owner = models.ForeignKey(
+        'auth.User', related_name='bucketlists', on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
