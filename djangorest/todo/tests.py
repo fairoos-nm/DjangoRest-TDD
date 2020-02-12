@@ -6,9 +6,6 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
-
-
-
 class ModelTestCase(TestCase):
     """
     This class defines the test suite for the Todo model.
@@ -47,12 +44,12 @@ class ViewTestCase(TestCase):
         self.client.force_authenticate(user=user)
         self.todo_data = {'title' : 'plan 2020!',
                           'description' : 'Go to Canada'}
-        self.response = self.client.post(reverse('create'),
+        self.response = self.client.post(reverse('todo_create'),
                                          self.todo_data,
                                          format="json")
-        self.todolist = Todo.objects.get(
-            title=list(self.todo_data.values())[0])
-
+        self.todolist = Todo.objects.get(title=list(self.todo_data.values())[0],
+                                         description=list(self.todo_data.values())[1])
+        
     def test_api_can_ceate_todo(self):
         """
         Test api has todo creation capability
@@ -63,20 +60,23 @@ class ViewTestCase(TestCase):
         """
         Test the api can get an given todo.
         """
-        response = self.client.get(reverse('details',
-                                           kwargs={'pk': self.todolist.id}),
-                                   format="json")
+    
+        response = self.client.get(
+            reverse('todo_details',
+                    kwargs={'pk': self.todolist.id}),
+            format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertContains(response, self.todolist)
+        self.assertContains(response, self.todolist.title and self.todolist.description)
 
     def test_api_can_update_a_todo(self):
         """
         Test the api can  updata a given todo
         """
 
-        new_data = {'description': 'Test description'}
+        new_data = {'title' : 'Plan 2030!',
+                    'description': 'Test description'}
         response = self.client.put(
-            reverse('details',
+            reverse('todo_details',
                     kwargs={'pk': self.todolist.id}),
             new_data,
             format="json")
@@ -88,7 +88,7 @@ class ViewTestCase(TestCase):
         """
 
         response = self.client.delete(
-            reverse('details',
+            reverse('todo_details',
                     kwargs={'pk': self.todolist.id}),
             format="json",
             follow=True)
