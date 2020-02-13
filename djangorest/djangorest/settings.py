@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'comman_app',
     'todo',
+    'frontend',
     'rest_framework.authtoken'
 ]
 
