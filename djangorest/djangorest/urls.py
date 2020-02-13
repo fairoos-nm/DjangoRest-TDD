@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('comman_app.urls')),
     url(r'^todo/', include('todo.urls')),
+    url(r'^', include('frontend.urls'))
 ]
